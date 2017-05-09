@@ -1,3 +1,8 @@
+// Capstone project
+// SEIS744 IoT
+// Charles Christianson
+// AIr quality sensor/indicator
+
 LEDStatus showStatusGreen(RGB_COLOR_GREEN, LED_PATTERN_FADE);
 LEDStatus showStatusYellow(RGB_COLOR_YELLOW, LED_PATTERN_SOLID);
 LEDStatus showStatusOrange(RGB_COLOR_ORANGE, LED_PATTERN_SOLID);
