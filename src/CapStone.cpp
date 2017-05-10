@@ -2,7 +2,7 @@
 // SEIS744 IoT
 // Charles Christianson
 // Air quality sensor/indicator
-// v.8
+// v.91
 
 LEDStatus showStatusGreen(RGB_COLOR_GREEN, LED_PATTERN_FADE);
 LEDStatus showStatusYellow(RGB_COLOR_YELLOW, LED_PATTERN_SOLID);
@@ -16,11 +16,11 @@ LEDStatus showStatusWhite(RGB_COLOR_WHITE, LED_PATTERN_BLINK);
 GoogleMapsDeviceLocator locator;
 const int MAX_DATA_LENGTH = 255;
 //Default to New York City
-//String latitude = "40.7141667";
-//String longitude = "-74.0063889";
+String latitude = "40.7141667";
+String longitude = "-74.0063889";
 
-String latitude = "39.9075000";
-String longitude = "116.3972300";
+//String latitude = "39.9075000";
+//String longitude = "116.3972300";
 
 bool toggleInternet = true;
 bool toggleSensor = false;
@@ -109,6 +109,7 @@ void loop() {
         if(toggleSensor)
         {
             setAirQualityIndicator(personalAirQualityGrade);
+            showStatusWhite.setActive(false);
         }
         else
         {
@@ -117,6 +118,9 @@ void loop() {
         }
     }
     // Waiting - this is a crude way to manage frequency of data reads - but good enough for now
+    
+    
+    
     
     //delay(30000);
     Serial.println("Begin delay loop...");
@@ -136,7 +140,7 @@ void loop() {
                 Serial.println(toggleInternet);
                 lastStatus1 = LOW;
                 delay(100);
-                //break;
+                break;
             }
             else
             {
@@ -163,7 +167,7 @@ void loop() {
                     digitalWrite(led, LOW);
                 }
                 delay(100);
-                //break;
+                break;
             }
             else
             {
@@ -190,7 +194,7 @@ void myHandler(const char *eventName, const char *data)
     int _genericAirQualityGrade = 0;
     int _breezometer_AQI = 0;
     
-    Serial.print("\tData receveived: ");
+    Serial.print("\tData received: ");
     Serial.println(data);
     
     _breezometer_AQI = String(data).trim().toInt();
@@ -239,18 +243,43 @@ void setAirQualityIndicator(int _airQualityGrade)
     {
         case 5:
             showStatusGreen.setActive(true);
+            showStatusYellow.setActive(false);
+            showStatusOrange.setActive(false);
+            showStatusRed.setActive(false);
+            showStatusMagenta.setActive(false);
+            showStatusWhite.setActive(false);
             break;    
         case 4:
             showStatusYellow.setActive(true);
+            showStatusGreen.setActive(false);              
+            showStatusOrange.setActive(false);
+            showStatusRed.setActive(false);
+            showStatusMagenta.setActive(false);
+            showStatusWhite.setActive(false);
             break;
         case 3:    
             showStatusOrange.setActive(true);
+            showStatusGreen.setActive(false);   
+            showStatusYellow.setActive(false);
+            showStatusRed.setActive(false);
+            showStatusMagenta.setActive(false);
+            showStatusWhite.setActive(false);
             break;
         case 2:    
             showStatusRed.setActive(true);
+            showStatusGreen.setActive(false);   
+            showStatusYellow.setActive(false);
+            showStatusOrange.setActive(false);
+            showStatusMagenta.setActive(false);
+            showStatusWhite.setActive(false);
             break;
         case 1:    
             showStatusMagenta.setActive(true);
+            showStatusGreen.setActive(false);   
+            showStatusYellow.setActive(false);
+            showStatusOrange.setActive(false);
+            showStatusRed.setActive(false);
+            showStatusWhite.setActive(false);
             break;
         default:
             showStatusGreen.setActive(false);   
