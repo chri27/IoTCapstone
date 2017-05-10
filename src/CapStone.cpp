@@ -96,9 +96,16 @@ void loop() {
     {
         //digitalWrite(led, LOW); // indicate internet data
         //Upload the local data for analysis
-        if(toggleSensor) { Particle.publish("SensorData", sensorDataJson , PRIVATE); }
-        // Check to update the current local air quality status
-        Particle.publish("GET_AQI_BREEZOMETER", "{\"coords\":{\"lat\":" + latitude + ",\"lon\":" + longitude + "}}"); // request the air quality value for this location
+        if(toggleSensor)
+        {
+            Particle.publish("SensorData", sensorDataJson , PRIVATE);
+            setAirQualityIndicator(personalAirQualityGrade);
+        }
+        else //sensor is off, so get our data from the internet
+        {
+            // Check to update the current local air quality status
+            Particle.publish("GET_AQI_BREEZOMETER", "{\"coords\":{\"lat\":" + latitude + ",\"lon\":" + longitude + "}}"); // request the air quality value for this location
+        }
     }
     else
     {
@@ -108,8 +115,8 @@ void loop() {
         //also use local indicator
         if(toggleSensor)
         {
-            setAirQualityIndicator(personalAirQualityGrade);
             showStatusWhite.setActive(false);
+            setAirQualityIndicator(personalAirQualityGrade);
         }
         else
         {
@@ -127,7 +134,7 @@ void loop() {
     
     int lastStatus1 = LOW;
     int lastStatus2 = LOW;
-    for(int l = 0; l < 600; l++)
+    for(int l = 0; l < 300; l++)
     {
         // check buttons
         if (digitalRead(button1) == HIGH )
@@ -139,8 +146,8 @@ void loop() {
                 Serial.print("\tButton 1 pressed: toggle is now: ");
                 Serial.println(toggleInternet);
                 lastStatus1 = LOW;
-                delay(100);
-                break;
+                //delay(100);
+                //break;
             }
             else
             {
@@ -166,8 +173,8 @@ void loop() {
                 {
                     digitalWrite(led, LOW);
                 }
-                delay(100);
-                break;
+                //delay(100);
+                //break;
             }
             else
             {
@@ -294,6 +301,7 @@ void setAirQualityIndicator(int _airQualityGrade)
 
 void setLocalAirQualityGrade(int _ppb)
 {
+    Serial.println("Setting local air quality");
     if (_ppb > 150) { personalAirQualityGrade = 1; Serial.println("Sensor Air Quality Poor"); }
     else if (_ppb > 100) { personalAirQualityGrade = 2; Serial.println("Sensor Air Quality Low"); }
     else if (_ppb > 50) { personalAirQualityGrade = 3; Serial.println("Sensor Air Quality Moderate"); }
